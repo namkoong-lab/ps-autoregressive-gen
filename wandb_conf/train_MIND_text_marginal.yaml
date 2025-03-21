@@ -1,0 +1,33 @@
+program: train_models.py
+method: grid
+project: train_news_text_marginal
+parameters:
+    save_name:
+        values: ['train_news_text_marginal']
+    wandb_user: # REPLACE WITH YOURS
+        values: ['ps-autoregressive']
+    data_dir: # REPLACE WITH YOURS
+        values: ['/shared/share_mala/implicitbayes/dataset_files/MIND_data/filter100/']
+    marginal_vs_sequential:
+        values: ['marginal']
+    freeze_bert:
+        values: [False]
+    batch_size: 
+        values: [100]
+    eval_batch_size:
+        values: [100]
+    transform_success_p_alpha:
+        values: [1]
+    MLP_width:
+        values: [100]
+    learning_rate:
+        values: [1e-5]
+    bert_learning_rate:
+        values: [1e-5]
+    weight_decay:
+        values: [1e-2]
+    num_loader_obs:
+        values: [500]
+    epochs:
+        values: [500]
+

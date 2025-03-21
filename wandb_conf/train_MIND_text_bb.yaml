@@ -1,0 +1,43 @@
+program: train_models.py
+method: grid
+project: train_MIND_text_bb
+parameters:
+    save_name:
+        values: ['train_news_text_bb']
+    wandb_user: # REPLACE WITH YOURS
+        values: ['ps-autoregressive']
+    data_dir: # REPLACE WITH YOURS
+        values: ['/shared/share_mala/implicitbayes/dataset_files/MIND_data/filter100/']
+    marginal_vs_sequential:
+        values: ['sequential']
+    sequential_beta_bernoulli:
+        values: [True]
+    sequential_beta_bernoulli_alpha_beta:
+        values: [True]
+    MLP_width:
+        values: [100]
+    MLP_layer:
+        values: [3]
+    batch_size: 
+        values: [100]
+    repeat_suffstat:
+        values: [100]
+    eval_batch_size:
+        values: [100]
+    transform_success_p_alpha:
+        values: [1]
+    learning_rate:
+        values: [1e-5] 
+    bert_learning_rate:
+        values: [1e-8] 
+    weight_decay:
+        values: [1e-2]
+    sample_frac: 
+        values: [1]
+    num_loader_obs:
+        values: [500]
+    num_loader_obs_train:
+        values: [500]
+    epochs:
+        values: [500]
+
