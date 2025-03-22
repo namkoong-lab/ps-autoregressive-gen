@@ -11,17 +11,7 @@ This is the code for the experiments in the paper.
 Everything here we have run on CPU, except where specified. There, each used a single NVIDIA A40 GPU. 
 
 # Create datasets
-For all of these, the shell scripts must be modified to use your own data directories. 
-
-**Synthetic (bimodal) dataset**
-This data is generated. 
-
-    ./shell_scripts/generate_data_bimodal.sh
-
-**MIND (news) dataset**
-Some data is downloaded in the script. Then, we post-process it. 
-
-    ./shell_scripts/generate_data_MIND.sh
+See instructions in the data_prep folder!
 
 # Train autoregressive sequence models $p_\theta$
 For all of these, the shell scripts and/or config files must be modified to use your own data directories and weights and biases (wandb) username. 
@@ -67,13 +57,7 @@ We run and cache some bandit algorithms, with commands listed here. Others (that
 * In these shell scripts, we have a for-loop over many environments. Please parallelize appropriately according to your resources. 
 * Adjust number of timesteps T as appropriate for the setting
 
-**PS-AR**
-
     ./shell_scripts/run_bandits_psar.sh
-
-**SquareCB**
-
-    ./shell_scripts/run_bandits_squarecb.sh
 
 
 # Notebooks
@@ -87,69 +71,16 @@ We run and cache some bandit algorithms, with commands listed here. Others (that
     MIND_posterior.ipynb
     MIND_bandit.ipynb
 
-# Empirical Bayes example
-**Generate data**
-
-    ./shell_scripts/generate_data_beta.sh
-
-**Train**
-
-    ./shell_scripts/train_synthetic_beta_bb.sh
-
-Then, to generate posterior samples (posterior samples with no observations are prior samples)
-run 
-
-    postprocessing.py
-
-on model outputs, to get samples from the prior. Then, for plotting, see
-
-    empirical_bayes.ipynb
-
-# Comparison of PS-AR generation horizons
-In the Appendix, we discuss variations on PS-AR: one in which we impute any unobserved outcomes, and another in which we generate a fixed number of imagined outcomes, both in order to construct $\hat\mu^{(a)}$. We compare these in the Appendix. To compute regret, 
-
-    ./shell_scripts/run_bandits_psar_compare_horizon.sh
-
-For plotting, see
-
-    MIND_bandit_psar_variant_comparison.ipynb
-
-# TS-Action: modeling best action, rather than reward
-Our code here is very similar to before, but models the best action rather than the reward.
-
-**Generate histories** 
-
-    generate_DPT_histories_synthetic.ipynb
-
-**Train models**
-
-    ./shell_scripts/train_dpt_bimodal.sh
-
-**bandit**
-    
-    ./shell_scripts/run_bandit_dpt.sh
-
-# Comparing TS-PSAR to TS-Action on smaller datasets
-**Generate smaller datasets**
-
-    ./shell_scripts/generate_data_bimodal_small.sh
-
-**Train models**
-
-    ./shell_scripts/train_dpt_bimodal_small.sh
-    ./shell_scripts/train_synthetic_bimodal_small.sh
-
-**Bandit**
-
-    No specific scripts, but you run the bandit scripts on the trained models. 
+# Extras
+Additional code for experiments in the appendix are in the extras folder
 
 # Details for using weights and biases
-I run weights and biases configs using
+We run weights and biases configs using
 
     wandb sweep SOMETHING.yaml
 
-which then outputs a sweep agent name, which I use as input to
+which then outputs a sweep agent name, which we use as input to
     
     wandb_agent_gpus.py
 
-which is run on a single machine, which can have multiple GPUs. 
+which is run on a single machine. 

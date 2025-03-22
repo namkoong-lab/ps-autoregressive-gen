@@ -77,7 +77,7 @@ def main():
     parser.add_argument('--model_dir', type=str, help='directory for model to load', default=None)
     parser.add_argument('--num_imagined', type=int, default=100)
     parser.add_argument('--bandit_alg', type=str, default='sequential', 
-                        choices=['sequential','greedy','squarecb','sequential_horizon', 'linearTS11','linearfeatureTS11','dpt','sampled_greedy']) 
+                        choices=['sequential','greedy','sequential_horizon', 'linearTS11','linearfeatureTS11','ts-action','sampled_greedy']) 
     parser.add_argument('--randomly_break_ties', type=parse_bool, default=False) # this is mostly for sequential PSAR 
     # bandit env params
     parser.add_argument('--env_idx', type=int)
@@ -115,7 +115,7 @@ def main():
     model = load_old_model(config, check['state_dict'], check)
     model.eval()
 
-    if args.bandit_alg=='dpt':
+    if args.bandit_alg=='ts-action':
         if config.dataset_type=='synthetic':
             # load up val dataset
             data_path = config.data_dir 
@@ -165,7 +165,7 @@ def main():
     file_savename = args.save_dir + '/' + get_file_savename(args)
     make_parent_dir(file_savename)
     loss_matrix = None
-    if args.bandit_alg != 'dpt':
+    if args.bandit_alg != 'ts-action':
         try:
             # compute prediction loss matrix
             loss_matrix = model.eval_seq(Z_representation, bandit_env.potential_outcomes)
@@ -180,10 +180,6 @@ def main():
         bandit_alg = SampledGreedyPosteriorMeanAlg(seq_model=model, 
                                     Z_representation=Z_representation,
                                     num_arms=args.num_arms,num_samples=args.num_imagined) 
-    elif args.bandit_alg=='squarecb':
-        bandit_alg = SquareCB(seq_model=model,
-                Z_representation=Z_representation,
-                num_arms=args.num_arms,T=args.T)
     elif args.bandit_alg=='sequential':
         bandit_alg = PosteriorHallucinationAlg(seq_model=model, 
                                        Z_representation=Z_representation, 
@@ -195,7 +191,7 @@ def main():
                                        Z_representation=Z_representation, 
                                        num_arms=args.num_arms,
                                        T=args.T)
-    elif args.bandit_alg == 'dpt':
+    elif args.bandit_alg == 'TS-action':
         bandit_alg = DPTSequenceAlg(model, Z_representation, args.num_arms)
     else:
         raise ValueError(f'unrecognized bandit alg: {args.bandit_alg}')

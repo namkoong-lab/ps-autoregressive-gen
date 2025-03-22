@@ -3,13 +3,6 @@ from torch import nn
 from scipy import special
 
 
-# This function is not used in any notebooks to my knowledge
-#def make_gg_model_data_split(marginal_preds):
-#    prior_dict = get_gg_params_data_split(marginal_preds)
-#    gp_model_eval_marginal = GaussianGaussian(prior_dict)
-#    return gp_model_eval_marginal
-    
-
 class GaussianGaussian(nn.Module):
    
     def __init__(self, prior_dict = None):

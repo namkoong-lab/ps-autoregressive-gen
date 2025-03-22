@@ -103,8 +103,6 @@ def main():
     config = parser.parse_args()
 
     # Currently data splitting only implemented for MIND
-    #if config.dataset_type == "synthetic":
-    #    assert config.datasplit in [None, "first_100", "last_100"]
     if config.onelayer:
         assert config.marginal_vs_sequential == 'marginal'
     if config.sequential_beta_bernoulli_alpha_beta:
@@ -400,7 +398,6 @@ def main():
         save_dict = {
             'state_dict':model.state_dict(),
             'optimizer': optimizer_dict,
-            #'scheduler': scheduler.state_dict(),
             'epoch': epoch,
             'val_loss_dict': val_loss_dict,
             'train_subset_loss_dict': train_subset_loss_dict,

@@ -7,7 +7,7 @@ T=1000
 num_arms=10
 context=False
 bandit_dir='bandit'
-alg='dpt'
+alg='ts-action'
 for env_idx in {0..500} 
 do
     echo $env_idx

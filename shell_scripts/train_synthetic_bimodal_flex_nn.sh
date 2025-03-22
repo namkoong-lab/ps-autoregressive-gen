@@ -1,6 +1,6 @@
 # replace with yours
 user=YOUR_WANDB_USERNAME
-base_data_dir=/shared/share_mala/implicitbayes/dataset_files/synthetic_data/bimodal
+base_data_dir=YOUR_DATA_DIR/dataset_files/synthetic_data/bimodal
 
 # =======
 
@@ -16,7 +16,7 @@ repeat_suffstat=10
 Z_dim=2
 lr=0.001
 
-python train_models.py --data_dir $base_data_dir/$data_subdir \
+python ../train_models.py --data_dir $base_data_dir/$data_subdir \
     --epochs $epochs --num_loader_obs $num_loader_obs --Z_dim $Z_dim \
     --save_name $save_name --wandb_user $user --marginal_vs_sequential $ms \
     --MLP_width 100 --batch_size $bs --eval_batch_size $bs \

@@ -15,12 +15,6 @@ from models import MarginalPredictor, SequentialPredictor, SequentialBetaBernoul
 def get_optimizer(model, config):
     param_list = list(model.named_parameters())
 
-    #{ # Zero learning rate for randomized prior weights
-    #        "params": [ p for n, p in param_list if 'prior_weights' in n ],
-    #        "weight_decay": 0,
-    #        "lr": 0,
-    #    },
-    
     optimizer_parameters = [ 
         { 
             "params": [ p for n, p in param_list if 'prior_weights' not in n ],
@@ -339,7 +333,6 @@ def get_val_loss(model, val_loader, device, category2id=None, loss_agg='sum_avg_
             if sequential_one_length is not None:
                 loss_matrix = loss_matrix[:,[sequential_one_length]]
                 click_mask_loss = copy.deepcopy(click_mask[:,[sequential_one_length]])
-                #click_mask[:,sequential_one_length+1:]=0
                 loss = loss_from_loss_matrix(loss_matrix, click_mask_loss, how=loss_agg, weight_factor=weight_factor).detach().cpu()
             else:
                 loss = loss_from_loss_matrix(loss_matrix, click_mask, how=loss_agg, weight_factor=weight_factor).detach().cpu()

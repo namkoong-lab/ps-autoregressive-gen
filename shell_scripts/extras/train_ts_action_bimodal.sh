@@ -19,7 +19,7 @@ name="${save_name}"
 val_history='/shared/share_mala/implicitbayes/dataset_files/synthetic_data/bimodal/N=500,D=2500,D_eval=1000,cnts1=25,cnts2=25,forced/dpt_histories/eval_hist_num_arms=10,E=1000,H=500,S=1,seed=234234234'
 for lr in 0.001 0.0001 0.01 0.1 
 do
-    python ./../train_models_dpt.py --data_dir $base_data_dir/$data_subdir \
+    python ./../train_models_ts_action.py --data_dir $base_data_dir/$data_subdir \
         --use_X False \
         --MLP_last_fn none \
         --val_dpt_history_data $val_history \

@@ -1,6 +1,6 @@
 # REPLACE WITH YOURS
 user=YOUR_WANDB_USER
-data_dir=/shared/share_mala/implicitbayes/dataset_files/MIND_data/filter100/
+data_dir=YOUR_DATA_DIR/dataset_files/MIND_data/filter100/
 save_name=0930_dpt_mind_test
 
 # ===
@@ -18,7 +18,7 @@ val_history='/shared/share_mala/implicitbayes/dataset_files/MIND_data/filter100/
 
 for lr in 0.001 0.0001 0.01 0.1 
 do
-    python ./../train_models_dpt.py --data_dir $data_dir \
+    python ./../train_models_ts_action.py --data_dir $data_dir \
         --freeze_bert $freezebert \
         --use_X False \
         --MLP_last_fn none \

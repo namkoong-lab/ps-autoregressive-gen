@@ -5,9 +5,12 @@ import numpy as np
 from torch import Tensor
 from torch.distributions.beta import Beta
 
-class ModelWithPrior(nn.Module):
+# Randomized prior functions:
+# Ian Osband, John Aslanides, and Albin Cassirer. Randomized prior functions for deep
+# reinforcement learning.
+class ModelWithRandPrior(nn.Module):
     def __init__(self, modelclass, prior_scale, *args, **kwargs):
-        super(ModelWithPrior, self).__init__()
+        super(ModelWithRandPrior, self).__init__()
         self.model = modelclass(*args, **kwargs)
         self.prior = modelclass(*args, **kwargs)
         self.prior_scale = prior_scale
@@ -17,9 +20,6 @@ class ModelWithPrior(nn.Module):
             prior_output = self.prior(*args, **kwargs)
         return model_output + self.prior_scale * prior_output
 
-# Randomized prior functions:
-# Ian Osband, John Aslanides, and Albin Cassirer. Randomized prior functions for deep
-# reinforcement learning.
 class LinearRandPrior(nn.Linear):
     def __init__(self, in_features: int, out_features: int, bias: bool = True,
                  device=None) -> None:
@@ -148,7 +148,7 @@ class MarginalPredictor(nn.Module):
                              num_layers=MLP_layer, width=MLP_width, rand_prior=rand_prior)
         else:
             print('make model with prior')
-            self.top_layer = ModelWithPrior(VariableMLP, self.prior_scale, 
+            self.top_layer = ModelWithRandPrior(VariableMLP, self.prior_scale, 
                              input_dim=self.z_encoder_output_dim,
                              num_layers=MLP_layer, width=MLP_width, rand_prior=False, last_fn='none')
 

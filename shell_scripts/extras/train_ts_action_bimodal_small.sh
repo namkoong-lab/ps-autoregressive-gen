@@ -23,7 +23,7 @@ data_subdir="N=500,D=${D},D_eval=1000,cnts1=${cnts1},cnts2=${cnts2}"
 name="${save_name}"
 for lr in 0.001 0.0001 0.01 0.1 
 do
-    python train_models_dpt.py --data_dir $base_data_dir/$data_subdir \
+    python train_models_ts_action.py --data_dir $base_data_dir/$data_subdir \
         --MLP_last_fn none \
         --val_dpt_history_data $val_history \
         --num_arms $num_arms \

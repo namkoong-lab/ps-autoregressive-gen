@@ -1,6 +1,7 @@
 import torch
 from dataset_MIND import get_token_dict
 from torch.utils.data import Dataset, DataLoader
+
 class DictOfListsDataset(Dataset):
     def __init__(self, data_dict):
         """
