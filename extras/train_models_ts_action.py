@@ -57,8 +57,6 @@ def get_argparser():
     parser.add_argument('--MLP_last_fn', type=str, default='none') # it is none for DPT models
     parser.add_argument('--repeat_suffstat', type=int, default=1,
                        help="number of times to repeat sufficient statitic input")
-    parser.add_argument('--rand_prior', type=int, default=0,
-                       help="Booling for whether the MLP uses randomized prior functions")
     # uses new randomized prior code in ModelWithPrior
     parser.add_argument('--prior_scale', type=float, default=0)
     parser.add_argument('--postprocess_often', type=int, default=0,
@@ -131,9 +129,6 @@ def main():
     if config.marginal_vs_sequential == 'sequential':
         descriptive_name += f"repeat_suffstat={config.repeat_suffstat},"
 
-    if config.rand_prior:
-        assert config.marginal_vs_sequential == 'marginal'
-        descriptive_name += "rand_prior=True,"
     # this uses the new randomized prior code
     if config.prior_scale != 0:
         assert config.marginal_vs_sequential == 'marginal'

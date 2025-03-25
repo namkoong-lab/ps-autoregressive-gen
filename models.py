@@ -20,25 +20,15 @@ class ModelWithRandPrior(nn.Module):
             prior_output = self.prior(*args, **kwargs)
         return model_output + self.prior_scale * prior_output
 
-class LinearRandPrior(nn.Linear):
-    def __init__(self, in_features: int, out_features: int, bias: bool = True,
-                 device=None) -> None:
-        super(LinearRandPrior, self).__init__(in_features, out_features, bias)
-        #self.prior_weights = torch.empty((out_features, in_features))
-        self.prior_weights = torch.nn.parameter.Parameter(torch.empty((out_features, in_features), requires_grad=False))
-        
-    def forward(self, input: Tensor) -> Tensor:
-        return F.linear(input, self.weight+self.prior_weights, self.bias)
 
 
 class VariableMLP(nn.Module):
-    def __init__(self, input_dim, output_dim=1, num_layers=3, width=50, rand_prior=False, last_fn='sigmoid', init_bias=None):
+    def __init__(self, input_dim, output_dim=1, num_layers=3, width=50, last_fn='sigmoid', init_bias=None):
         super(VariableMLP, self).__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.num_layers = num_layers
         self.width = width
-        self.rand_prior = rand_prior
         self.last_fn = last_fn
         self.init_bias = init_bias
 
@@ -47,30 +37,17 @@ class VariableMLP(nn.Module):
 
         layers = []
 
-        if rand_prior:
-            # Add input layer
-            layers.append(LinearRandPrior(input_dim, hidden_sizes[0]))
+        # Add input layer
+        layers.append(nn.Linear(input_dim, hidden_sizes[0]))
+        layers.append(nn.ReLU())
+
+        # Add hidden layers
+        for i in range(len(hidden_sizes) - 1):
+            layers.append(nn.Linear(hidden_sizes[i], hidden_sizes[i+1]))
             layers.append(nn.ReLU())
-    
-            # Add hidden layers
-            for i in range(len(hidden_sizes) - 1):
-                layers.append(LinearRandPrior(hidden_sizes[i], hidden_sizes[i+1]))
-                layers.append(nn.ReLU())
-    
-            # Add output layer
-            layers.append(LinearRandPrior(hidden_sizes[-1], output_dim))
-        else:
-            # Add input layer
-            layers.append(nn.Linear(input_dim, hidden_sizes[0]))
-            layers.append(nn.ReLU())
-    
-            # Add hidden layers
-            for i in range(len(hidden_sizes) - 1):
-                layers.append(nn.Linear(hidden_sizes[i], hidden_sizes[i+1]))
-                layers.append(nn.ReLU())
-    
-            # Add output layer
-            layers.append(nn.Linear(hidden_sizes[-1], output_dim))
+
+        # Add output layer
+        layers.append(nn.Linear(hidden_sizes[-1], output_dim))
 
         # Initialize weights with Xavier uniform
         self.apply(self.init_weights)
@@ -92,10 +69,6 @@ class VariableMLP(nn.Module):
         if isinstance(m, nn.Linear):
             nn.init.xavier_uniform_(m.weight)
             nn.init.constant_(m.bias, 0.0)
-        if isinstance(m, LinearRandPrior):
-            nn.init.xavier_uniform_(m.weight)
-            nn.init.constant_(m.bias, 0.0)
-            nn.init.xavier_uniform_(m.prior_weights)
 
     def forward(self, x):
         return self.model(x)
@@ -118,13 +91,12 @@ class BertEncoder(nn.Module):
 
 class MarginalPredictor(nn.Module):
     
-    def __init__(self, bert_encoder=None, category_args=None, Z_dim=None, MLP_layer=6, MLP_width=50, rand_prior=False, prior_scale=0):
+    def __init__(self, bert_encoder=None, category_args=None, Z_dim=None, MLP_layer=6, MLP_width=50, prior_scale=0):
         super().__init__()
         self.use_bert = False
         self.use_category = False
         self.MLP_width = MLP_width
         self.MLP_layer = MLP_layer
-        self.rand_prior = rand_prior
         self.prior_scale = prior_scale # osband type
         print('model prior scale', prior_scale)
         if bert_encoder is not None:
@@ -145,12 +117,12 @@ class MarginalPredictor(nn.Module):
 
         if self.prior_scale == 0:
             self.top_layer = VariableMLP(input_dim=self.z_encoder_output_dim,
-                             num_layers=MLP_layer, width=MLP_width, rand_prior=rand_prior)
+                             num_layers=MLP_layer, width=MLP_width)
         else:
             print('make model with prior')
             self.top_layer = ModelWithRandPrior(VariableMLP, self.prior_scale, 
                              input_dim=self.z_encoder_output_dim,
-                             num_layers=MLP_layer, width=MLP_width, rand_prior=False, last_fn='none')
+                             num_layers=MLP_layer, width=MLP_width, last_fn='none')
 
         self.sigmoid = nn.Sigmoid()
     

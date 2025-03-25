@@ -116,8 +116,6 @@ def get_model_and_optimizer_MIND(config, category2id_dict=None):
     if not is_sequential and config.marginal_vs_sequential != 'marginal':
         raise ValueError('config.marginal_vs_sequential must be either marginal or sequential')
 
-    if not hasattr(config, 'rand_prior'):
-        config.rand_prior = 0
     if not hasattr(config, 'prior_scale'):
         config.prior_scale = 0
     # dataset consists of dumped embeddings; we only train the head
@@ -157,7 +155,7 @@ def get_model_and_optimizer_MIND(config, category2id_dict=None):
         else:
             print('train fns prior scale')
             model = MarginalPredictor(bert, MLP_width=config.MLP_width, MLP_layer=config.MLP_layer,
-                                        rand_prior=config.rand_prior, prior_scale=config.prior_scale).to(config.device)
+                                        prior_scale=config.prior_scale).to(config.device)
 
         if config.embed_data_dir:
             model.z_encoder = nn.Identity()
@@ -198,7 +196,7 @@ def get_model_and_optimizer_MIND(config, category2id_dict=None):
             assert category_args is not None
             model = MarginalPredictor(category_args=category_args,
                                         MLP_width=config.MLP_width, MLP_layer=config.MLP_layer,
-                                        rand_prior=config.rand_prior, prior_scale=config.prior_scale).to(config.device)
+                                        prior_scale=config.prior_scale).to(config.device)
         if config.embed_data_dir:
             model.z_encoder = nn.Identity()
 
@@ -220,8 +218,6 @@ def get_model_and_optimizer_synthetic(config):
     if not is_sequential and config.marginal_vs_sequential != 'marginal':
         raise ValueError('config.marginal_vs_sequential must be either marginal or sequential')
 
-    if not hasattr(config, 'rand_prior'):
-        config.rand_prior = 0
     if not hasattr(config, 'prior_scale'):
         config.prior_scale = 0
     if not hasattr(config, 'MLP_last_fn'):
@@ -250,7 +246,7 @@ def get_model_and_optimizer_synthetic(config):
         assert config.Z_dim > 0
         model = MarginalPredictor(Z_dim=config.Z_dim,
                                     MLP_width=config.MLP_width, MLP_layer=config.MLP_layer,
-                                    rand_prior=config.rand_prior, prior_scale=config.prior_scale).to(config.device)
+                                    prior_scale=config.prior_scale).to(config.device)
 
     optimizer_dict = { 'all': get_optimizer(model, config) }
     return model, optimizer_dict
