@@ -9,7 +9,6 @@ import pandas as pd
 from collections import defaultdict
 
 # Importing from files
-from generate_beta_data import fit_beta_dist, get_beta_postpred
 from util import get_best_subdir, make_parent_dir
 #from models import BetaProcess, SequentialPredictor
 
