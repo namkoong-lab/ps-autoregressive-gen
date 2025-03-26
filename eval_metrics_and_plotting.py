@@ -12,6 +12,7 @@ from collections import defaultdict
 from util import get_best_subdir, make_parent_dir
 #from models import BetaProcess, SequentialPredictor
 
+
 #################### Prediction Evaluation and Plotting #####################
 
 def get_prediction_metric_values(pred, click_rate, metric):
@@ -223,16 +224,6 @@ def draw_posterior_samples_MIND(all_model_dicts, all_num_prev_obs, num_imagined,
 
     return posterior_dict
 
-def get_synthetic_model_path_and_data(cnts=5, D=5000, cols=500, num_imagined=100, num_post_samples=500,
-                         num_obs=0, init0=False):
-    base_dir = get_synthetic_base_model_path(cnts, D, cols, init0)
-    best_subdir = get_best_subdir(base_dir,  
-                                  prefix='sequential')
-    model_dir = base_dir + '/' + best_subdir 
-    model_path = model_dir + '/best_loss.pt'
-    config = torch.load(model_dir + '/config.pt')
-    extra_eval_data = torch.load(config.extra_eval_data)
-    return model_path, extra_eval_data
 
 
 def draw_posterior_samples_synthetic(cnts=5, rows_and_cols=[(5000,500),(500,500)],
