@@ -1,5 +1,5 @@
 
-This is the code for the experiments in the paper. 
+This is the code for the experiments in the paper "Active Exploration via Autoregressive Generation of Missing Data" (https://arxiv.org/abs/2405.19466). 
 
 # Requirements
 **Python environment**
